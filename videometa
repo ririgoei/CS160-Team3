@@ -1,0 +1,66 @@
+#!/usr/bin/python
+
+# videometa :
+#
+# This takes one argument, the video id number.
+# It stores metadata about the input video into
+# the video_metadata table.
+# This script should be in Apache cgi-bin.
+#
+# Videos are expected to be in /cs160/videos/<#>.mp4
+
+import sys
+import subprocess
+import MySQLdb
+
+
+vidid = sys.argv[1]
+
+videopath = "/cs160/videos/"
+videofn = vidid + ".mp4"
+videofile = videopath + videofn
+
+usercmd = "echo `whoami`"
+usname = subprocess.check_output(usercmd, shell=True)
+
+getcmd = "ffprobe -v 0 -select_streams v:0 -show_entries stream=height,width,r_frame_rate,nb_frames " + videofile
+a = subprocess.check_output(getcmd, shell=True)
+
+getcmd = "ffprobe -v 0 -select_streams v:0 -show_entries stream=width " \
+         + videofile + "|grep -v STREAM|cut -f 2 -d="
+width = subprocess.check_output(getcmd, shell=True)
+
+getcmd = "ffprobe -v 0 -select_streams v:0 -show_entries stream=height " \
+         + videofile + "|grep -v STREAM|cut -f 2 -d="
+height = subprocess.check_output(getcmd, shell=True)
+
+getcmd = "ffprobe -v 0 -select_streams v:0 -show_entries stream=r_frame_rate " \
+         + videofile + "|grep -v STREAM|cut -f 2 -d="
+r_frame_rate = subprocess.check_output(getcmd, shell=True)
+
+getcmd = "ffprobe -v 0 -select_streams v:0 -show_entries stream=nb_frames " \
+         + videofile + "|grep -v STREAM|cut -f 2 -d="
+nb_frames = subprocess.check_output(getcmd, shell=True)
+
+
+#print "video id is = " + vidid
+#print "username is = " + usname
+#print "the height is = " + height
+#print "the width is = " + width
+#print "the r_frame_rate is = " + r_frame_rate
+#print "the nb_frames is = " + nb_frames
+
+
+print "Content-type:text/html\n\n"
+
+try:
+  conn = MySQLdb.connect('localhost', "root", "2800", "cs160")
+  print "success"
+except:
+  print "error"
+cur = conn.cursor()
+
+cur.execute("insert into video_metadata values (%d,%d,%d,%f,%d,%s)", (nb_frames,width,height,r_frame_rate,vidid,videofn))
+conn.commit()
+cur.close()
+conn.close()
