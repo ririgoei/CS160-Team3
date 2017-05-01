@@ -1,0 +1,100 @@
+#!/usr/bin/python
+
+
+## NOTE: This is not functional because the database command
+## probably needs to be changed?  Currently this script only
+## prints the info to the screen instead of executing the
+## database commands.
+
+
+# getallpoints :
+# 
+# This takes one argument, the video id number.
+# It takes each saved frame image of the video
+# and obtains 68 face-points from each, saving
+# everything into the database.
+# This script should be in Apache cgi-bin.
+# 
+# Videos are expected to be in /cs160/videos/<#>.mp4
+# 
+# Frames (grayscale) are expected to be in:
+# /cs160/frames/<videoid>/color/<videoid>.<frame#>.png
+# 
+
+import sys
+import subprocess
+import os
+import os.path
+import string
+
+myname = sys.argv[0]
+
+if ((len(sys.argv) < 2 or  (len(sys.argv) > 2))):
+    print "syntax: " + myname + " <video-id#>"
+    sys.exit(1)
+
+vidid = sys.argv[1]
+videopath = "/cs160/videos/"
+videofile = videopath + vidid + ".mp4"
+imgdir = "/cs160/frames/" + vidid + "/gray/"
+
+# print "vpth is : " + videopath
+# print "vfile is : " + videofile
+# print "imgdir is : " + imgdir
+
+if not os.path.isfile(videofile):
+    print "error: video file " + videofile + " not found."
+    sys.exit(1)
+
+getcmd = "ffprobe -v 0 -select_streams v:0 -show_entries stream=nb_frames " \
+         + videofile + "|grep -v STREAM|cut -f 2 -d="
+nb_frames = subprocess.check_output(getcmd, shell=True)
+
+fn = nb_frames.strip()
+print "please wait...this may take over " + fn + " minutes..."
+
+for i in xrange(1, int(nb_frames) + 1):
+    frameid = '{:d}'.format(i)
+    imgfile = vidid + "." + frameid + ".png"
+    if not os.path.isfile(imgdir + imgfile):
+        print "err: frame file " + imgdir + imgfile + " not found."
+        sys.exit(2)
+
+    tfile = "/tmp/list_det_0.txt"
+
+    # print "processing " + imgfile
+    # print "imgid = " + frameid
+    
+    getpointscmd = "FaceLandmarkImg -f " + imgfile + " -inroot " + imgdir + " -of list.txt -outroot /tmp"
+    a = subprocess.check_output(getpointscmd, shell=True)
+    
+    catcmd = "cat " + tfile + "|grep -A 68 npoints" \
+                + "|grep -v npoints|grep -v {|grep -v }"
+    points = subprocess.check_output(catcmd, shell=True)
+    # print "-------"
+    # print points
+    # print "-------"
+
+    pointnum = 1
+    for pline in points.splitlines():
+        # print "got a line:"
+        # print pline
+
+        # Need to change the database command syntax??
+
+        dbline = "postgres add video=" + vidid + " frames=" + str(i)
+        dbline = dbline + " point=" + str(pointnum)
+
+        xy = pline.split()
+        dbline = dbline + " x=" + xy[0] + " y=" + xy[1]
+
+	# Here is where the database insert command should be
+        # executed, rather than printing the command.
+
+        # a = subprocess.check_output(dbline, shell=True)
+	print dbline
+
+	pointnum = pointnum + 1
+
+
+

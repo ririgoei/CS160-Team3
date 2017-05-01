@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+
+# videosplit :
+# 
+# This takes one argument, the video id number.
+# It splits the input video into separate png pictures
+# (both color and black/white versions).
+# This script should be in Apache cgi-bin.
+# 
+# Videos are expected to be in /cs160/videos/<#>.mp4
+# 
+# Frames are stored at:
+# /cs160/frames/<videoid>/color/<videoid>.<frame#>.png
+# /cs160/frames/<videoid>/gray/<videoid>.<frame#>.png
+# 
+
+
+if [ $# -lt 1 ]
+then
+	echo "missing argument"
+	echo "syntax: $0 <video-id#>"
+	exit 1
+fi
+if [ $# -gt 1 ]
+then
+	echo "too many arguments"
+	echo "syntax: $0 <video-id#>"
+	exit 1
+fi
+
+vid=$1
+videopath="/cs160/videos"
+videofile="$videopath/$vid.mp4"
+graypath="/cs160/frames/$vid/gray"
+colorpath="/cs160/frames/$vid/color"
+
+
+if [ -f $videofile ]; then
+	echo "input video:"
+	ls -al $videopath/$vid.mp4
+else
+	echo "video file $vid.mp4 not found in $videopath"
+	echo "aborting."
+	exit 1
+fi
+
+echo "creating directories..."
+mkdir -p $colorpath
+mkdir -p $graypath
+
+echo "starting the split now..."
+echo "ffmpeg -i $videopath/$vid.mp4 $colorpath/$vid.%d.png"
+ffmpeg -i $videopath/$vid.mp4 $colorpath/$vid.%d.png
+
+echo "ffmpeg -i $videopath/$vid.mp4 -vf format=gray $graypath/$vid.%d.png"
+ffmpeg -i $videopath/$vid.mp4 -vf format=gray $graypath/$vid.%d.png
+
+
+exit 0
+
+
+
+
+
