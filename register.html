@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="programming_project_2.css">
+	<title>Create a New Account</title>
+</head>
+<body>
+<div style="text-align: center;">
+	<h1><strong>Create Account</strong></h1>
+	<h3><strong>Sign up here!</strong></h3>
+	<form action="/cgi-bin/register.cgi" method="POST">
+</div>
+<div style="text-align: center; margin-left: 660px; margin-right: 660px;">
+<p>
+	   <strong><span style="color: red;">*</span></strong> = <strong><em>required</em></strong><br><br>
+</div>
+<div style="text-align: center">
+	   <span style="font-family: Arial;">First Name</span>: <input type="text" name="name" placeholder="Enter first name" style="margin-left: 5px;"><br>
+	   <span style="font-family: Arial;">Last Name</span>: <input type="text" name="name" placeholder="Enter last name" style="margin-left: 6px;"><br><br>
+	   <span style="font-family: Arial;">Username</span><strong><span style="color: red;">*</span></strong>: <input type="text" name="name" placeholder="Enter username" size="20" maxlength="20" style="margin-left: 5px;" required><br>
+	   <span style="font-family: Arial;">Password</span><strong><span style="color: red;">*</span></strong>: <input type="password" name="set_password" placeholder="Enter password" size="20" maxlength="20" style="margin-left: 5px;" required><br>
+	   <span style="font-family: Arial;">Password</span><strong><span style="color: red;">*</span></strong>: <input type="password" name="retype_password" placeholder="Confirm password" size="20" maxlength="20" style="margin-left: 5px;" required>
+</p><br>
+
+           <input type="submit" value="Submit Registration Info">
+	</form>
+
+</div>
+</body>
+</html>
