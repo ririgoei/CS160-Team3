@@ -45,18 +45,16 @@ else
 	exit 1
 fi
 
-exit 0
-
 echo "creating directories..."
 mkdir -p $colorpath
 mkdir -p $graypath
 
 echo "starting the split now..."
-echo "ffmpeg -i $videopath/$vid.mp4 $colorpath/$vid.%02d.png"
-ffmpeg -i $videopath/$vid.mp4 $colorpath/$vid.%02d.png
+echo "ffmpeg -i $videopath/$vid.mp4 $colorpath/$vid.%d.png"
+ffmpeg -i $videopath/$vid.mp4 $colorpath/$vid.%d.png
 
-echo "ffmpeg -i $videopath/$vid.mp4 -vf format=gray $graypath/$vid.%02d.png"
-ffmpeg -i $videopath/$vid.mp4 -vf format=gray $graypath/$vid.%02d.png
+echo "ffmpeg -i $videopath/$vid.mp4 -vf format=gray $graypath/$vid.%d.png"
+ffmpeg -i $videopath/$vid.mp4 -vf format=gray $graypath/$vid.%d.png
 
 
 exit 0

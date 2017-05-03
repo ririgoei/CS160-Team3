@@ -26,8 +26,11 @@ import subprocess
 import os
 import os.path
 import string
+import MySQLdb
 
 myname = sys.argv[0]
+db = MySQLdb.connect("127.0.0.1:3306","root","root","cs160");
+cursor = db.cursor()
 
 if ((len(sys.argv) < 2 or  (len(sys.argv) > 2))):
     print "syntax: " + myname + " <video-id#>"
@@ -86,15 +89,17 @@ for i in xrange(1, int(nb_frames) + 1):
         dbline = dbline + " point=" + str(pointnum)
 
         xy = pline.split()
+		x = "x_"+pointNum
+		y = "y_"+pointNum
+		query = "INSERT INTO cs160.openface_data("+x+","+y+",video_id) VALUES ("+xy[0]+","+xy[1]+","
+			+vidid+")ON DUPLICATE KEY UPDATE "+x+"="+xy[0]+", " + y + "=" + xy[1] + ";"
+		cursor.execute(query);
         dbline = dbline + " x=" + xy[0] + " y=" + xy[1]
+		pointnum = pointnum + 1
 
-	# Here is where the database insert command should be
-        # executed, rather than printing the command.
-
+		# Check output?
         # a = subprocess.check_output(dbline, shell=True)
 	print dbline
-
-	pointnum = pointnum + 1
 
 
 
