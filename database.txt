@@ -21,7 +21,7 @@ CREATE TABLE video_metadata (
 
 CREATE TABLE head_position (
 	yaw REAL,
-    pinch REAL,
+    pitch REAL,
     roll REAL,
     frame_numbers INT DEFAULT 0,
     video_id INT DEFAULT 0,
