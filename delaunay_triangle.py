@@ -14,7 +14,7 @@ queryFrames = "SELECT num_of_frames FROM video_metadata WHERE video_id="+vidid+"
 cursor.execute(queryFrames)
 data = cursor.fetchall()
 for data_out in data:
-	frameNum.append(data_out[0])
+    frameNum.append(data_out[0])
 
 queryWidth = "SELECT x_res FROM video_metadata WHERE video_id="+vidid+";"
 queryHeight = "SELECT y_res FROM video_metadata WHERE video_id="+vidid+";"
@@ -83,19 +83,18 @@ if __name__ == '__main__':
  
     # Create an array of points.
     points = [];
-	# Loop data's length; points.append((x[0], y[0]));
-	
-	x = 'x_'
-	y = 'y_'
-	for i in range(1, 68):
-		x+=i
-		y+=i
-		frameNumIndex = frameNum[i]
-		cursor.execute("SELECT "+x+","+y+" FROM cs160.openface_data WHERE video_id="+vidid+" AND 
-			frame_numbers=" + frameNumIndex + ";")
-		data = cursor.fetchall()
-		for data_out in data:
-			points.append(data_out[0], data_out[1])
+    # Loop data's length; points.append((x[0], y[0]));
+    
+    x = "x_"
+    y = "y_"
+    for i in range(1, 68):
+        x+=i
+        y+=i
+        frameNumIndex = frameNum[i]
+        cursor.execute("SELECT "+x+","+y+" FROM cs160.openface_data WHERE video_id="+vidid+" AND frame_numbers=" + frameNumIndex + ";")
+        data = cursor.fetchall()
+        for data_out in data:
+            points.append(data_out[0], data_out[1])
  
     # Insert points into subdiv
     for p in points :
