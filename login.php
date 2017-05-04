@@ -15,7 +15,7 @@
       <input type="password" name="password" required />
       <br /> <br />
       
-      <input type="submit" value="Log In" />
+      <input href="member_login.html" type="submit" value="Log In" />
     </form>
   </body>
 
