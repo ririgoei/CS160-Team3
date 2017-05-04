@@ -37,7 +37,7 @@ def rect_contains(rect, point) :
  
 # Draw a point
 def draw_point(img, p, color ) :
-    cv2.circle (img, p, 3, color, cv2.cv.CV_FILLED, cv2.CV_AA, 0)
+    cv2.circle (img, p, 3, color, cv2.cv.CV_FILLED, cv2.LINE_8, 0)
  
  
 # Draw delaunay triangles
@@ -52,9 +52,9 @@ def draw_delaunay(img, subdiv, delaunay_color ) :
         pt2 = (t[2], t[3])
         pt3 = (t[4], t[5])
         if rect_contains(r, pt1) and rect_contains(r, pt2) and rect_contains(r, pt3) :
-            cv2.line(img, pt1, pt2, delaunay_color, 1, cv2.CV_AA, 0)
-            cv2.line(img, pt2, pt3, delaunay_color, 1, cv2.CV_AA, 0)
-            cv2.line(img, pt3, pt1, delaunay_color, 1, cv2.CV_AA, 0)
+            cv2.line(img, pt1, pt2, delaunay_color, 1, cv2.LINE_8, 0)
+            cv2.line(img, pt2, pt3, delaunay_color, 1, cv2.LINE_8, 0)
+            cv2.line(img, pt3, pt1, delaunay_color, 1, cv2.LINE_8, 0)
  
 if __name__ == '__main__':
  
