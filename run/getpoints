@@ -1,24 +1,21 @@
 #!/usr/bin/python
 
 
-## NOTE: This is not functional because the database command
-## probably needs to be changed?  Currently this script only
-## prints the info to the screen instead of executing the
-## database commands.
-
-
-# getallpoints :
+# getoints :
 # 
 # This takes one argument, the video id number.
 # It takes each saved frame image of the video
 # and obtains 68 face-points from each, saving
-# everything into the database.
+# everything into a separate file for each frame.
 # This script should be in Apache cgi-bin.
 # 
 # Videos are expected to be in /cs160/videos/<#>.mp4
 # 
 # Frames (grayscale) are expected to be in:
-# /cs160/frames/<videoid>/color/<videoid>.<frame#>.png
+# /cs160/frames/<videoid>/gray/<videoid>.<frame#>.png
+# 
+# List of points are saved to:
+# /cs160/frames/<videoid>/points/<videoid>.<frame#>.points
 # 
 
 import sys
@@ -26,11 +23,8 @@ import subprocess
 import os
 import os.path
 import string
-import MySQLdb
 
 myname = sys.argv[0]
-db = MySQLdb.connect("127.0.0.1:3306","root","root","cs160");
-cursor = db.cursor()
 
 if ((len(sys.argv) < 2 or  (len(sys.argv) > 2))):
     print "syntax: " + myname + " <video-id#>"
@@ -41,13 +35,14 @@ videopath = "/cs160/videos/"
 videofile = videopath + vidid + ".mp4"
 imgdir = "/cs160/frames/" + vidid + "/gray/"
 
-# print "vpth is : " + videopath
-# print "vfile is : " + videofile
-# print "imgdir is : " + imgdir
+pointsdir = "/cs160/frames/" + vidid + "/points/"
 
 if not os.path.isfile(videofile):
     print "error: video file " + videofile + " not found."
     sys.exit(1)
+
+if not os.path.isdir(pointsdir):
+    os.mkdir(pointsdir)
 
 getcmd = "ffprobe -v 0 -select_streams v:0 -show_entries stream=nb_frames " \
          + videofile + "|grep -v STREAM|cut -f 2 -d="
@@ -73,33 +68,19 @@ for i in xrange(1, int(nb_frames) + 1):
     
     catcmd = "cat " + tfile + "|grep -A 68 npoints" \
                 + "|grep -v npoints|grep -v {|grep -v }"
-    points = subprocess.check_output(catcmd, shell=True)
-    # print "-------"
-    # print points
-    # print "-------"
+    rawpoints = subprocess.check_output(catcmd, shell=True)
 
-    pointnum = 1
-    for pline in points.splitlines():
-        # print "got a line:"
-        # print pline
+    # save points to file
+    pointsfile = pointsdir + vidid + "." + frameid + ".points"
+    filep = open(pointsfile, "w")
 
-        # Need to change the database command syntax??
+    for pline in rawpoints.splitlines():
+        x, y = pline.split()
+        outline = "%d %d\n" % (int(float(x)), int(float(y)))
+        filep.write(outline)
 
-        dbline = "postgres add video=" + vidid + " frames=" + str(i)
-        dbline = dbline + " point=" + str(pointnum)
+    filep.close()
 
-        xy = pline.split()
-		x = "x_"+pointNum
-		y = "y_"+pointNum
-		query = "INSERT INTO cs160.openface_data("+x+","+y+",video_id) VALUES ("+xy[0]+","+xy[1]+","
-			+vidid+")ON DUPLICATE KEY UPDATE "+x+"="+xy[0]+", " + y + "=" + xy[1] + ";"
-		cursor.execute(query);
-        dbline = dbline + " x=" + xy[0] + " y=" + xy[1]
-		pointnum = pointnum + 1
-
-		# Check output?
-        # a = subprocess.check_output(dbline, shell=True)
-	print dbline
-
+    print "done frame " + frameid
 
 
