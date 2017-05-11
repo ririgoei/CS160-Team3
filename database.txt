@@ -1,7 +1,7 @@
 CREATE SCHEMA cs160;
 
 CREATE TABLE user_profile (
-	username VARCHAR(500) NOT NULL PRIMARY KEY,
+    username VARCHAR(500) NOT NULL PRIMARY KEY,
     password VARCHAR(500),
     first_name VARCHAR(500),
     last_name VARCHAR(500),
@@ -10,26 +10,27 @@ CREATE TABLE user_profile (
 );
 
 CREATE TABLE video_metadata (
-	num_of_frames INT DEFAULT 0,
+    num_of_frames INT DEFAULT 0,
     x_res INT DEFAULT 0,
     y_res INT DEFAULT 0,
     fps REAL,
-    video_id INT DEFAULT 0,
+    video_id VARCHAR(500),
     video_name VARCHAR(500),
+    username VARCHAR(500),
     PRIMARY KEY(x_res, y_res)
 );
 
 CREATE TABLE head_position (
-	yaw REAL,
+    yaw REAL,
     pinch REAL,
     roll REAL,
     frame_numbers INT DEFAULT 0,
-    video_id INT DEFAULT 0,
+    video_id VARCHAR(500),
     PRIMARY KEY(frame_numbers, video_id)
 );
 
 CREATE TABLE pupil_date (
-	x_left_openface INT DEFAULT 0,
+    x_left_openface INT DEFAULT 0,
     x_right_openface INT DEFAULT 0,
     y_left_openface INT DEFAULT 0,
     y_right_openface INT DEFAULT 0,
@@ -109,6 +110,6 @@ CREATE TABLE openface_data (
     x_67 INT DEFAULT 0, y_67 INT DEFAULT 0,
     x_68 INT DEFAULT 0, y_68 INT DEFAULT 0,
     frame_numbers INT DEFAULT 0,
-    video_id INT,
+    video_id VARCHAR(500),
     PRIMARY KEY(frame_numbers, video_id)
 );
