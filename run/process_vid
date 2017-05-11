@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+
+# process_video :
+# 
+# This takes one argument, the video id number.
+# The video should be downloaded before running
+# this script, to:
+#	/cs60/videos/<video-id>.mp4
+# 
+# A modified video is stored to:
+#	/cs60/videos/<video-id>.out.mp4
+# 
+# These scripts are run in order:
+# 	videosplit
+# 	videometa
+# 	getpoints
+# 	makevideo
+#
+
+runpath=/cs160/run
+
+if [ $# -lt 1 ]
+then
+	echo "missing argument"
+	echo "syntax: $0 <video-id#>"
+	exit 1
+fi
+if [ $# -gt 1 ]
+then
+	echo "too many arguments"
+	echo "syntax: $0 <video-id#>"
+	exit 1
+fi
+
+$runpath/videosplit $1
+
+$runpath/videometa $1
+
+$runpath/getpoints $1
+
+$runpath/makevid $1
+

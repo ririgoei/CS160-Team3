@@ -1,0 +1,69 @@
+#!/usr/bin/python
+
+
+# makevid :
+# 
+# This takes one argument, the video id number.
+# Saved face data is used to make a modified video
+# with triangles drawn on facial landmarks.
+# This script should be in Apache cgi-bin.
+# 
+# Videos are expected to be in /cs160/videos/<#>.mp4
+# 
+# Frames (color) are expected to be in:
+# /cs160/frames/<videoid>/color/<videoid>.<frame#>.png
+# 
+# List of points are expected to be in:
+# /cs160/frames/<videoid>/points/<videoid>.<frame#>.points
+# 
+# Marked color frames are stored to:
+# /cs160/frames/<videoid>/marked/<videoid>.<frame#>.png
+
+import sys
+import subprocess
+import os
+import os.path
+import string
+
+myname = sys.argv[0]
+runpath="/cs160/run/"
+
+if ((len(sys.argv) < 2 or  (len(sys.argv) > 2))):
+    print "syntax: " + myname + " <video-id#>"
+    sys.exit(1)
+
+vidid = sys.argv[1]
+videopath = "/cs160/videos/"
+videofile = videopath + vidid + ".mp4"
+imgdir = "/cs160/frames/" + vidid + "/color/"
+
+pointsdir = "/cs160/frames/" + vidid + "/points/"
+
+if not os.path.isfile(videofile):
+    print "error: video file " + videofile + " not found."
+    sys.exit(1)
+
+if not os.path.isdir(imgdir):
+    print "error: frames directory " + imgdir + " not found."
+    sys.exit(1)
+
+if not os.path.isdir(pointsdir):
+    print "error: points directory " + pointsdir + " not found."
+    sys.exit(1)
+
+getcmd = "ffprobe -v 0 -select_streams v:0 -show_entries stream=nb_frames " \
+         + videofile + "|grep -v STREAM|cut -f 2 -d="
+nb_frames = subprocess.check_output(getcmd, shell=True)
+
+fn = nb_frames.strip()
+
+for i in xrange(1, int(nb_frames) + 1):
+    # use color frame and set of face points to draw triangles
+    # and save as modified frame.
+
+    delcmd = runpath + "delaunay_triangle.py "+vidid+" "+str(i)
+    print "delcmd is x " + delcmd + " x"
+    subprocess.check_output(delcmd, shell=True)
+
+    print "done triangles for frame " + str(i)
+
