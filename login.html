@@ -9,7 +9,11 @@
 	<h1><strong>User Login</strong></h1>
 	<h3><strong>Login into your account.</strong></h3>
 </div>
+<<<<<<< HEAD
 <form action="http://localhost/cgi-bin/getUser.cgi" method="POST">
+=======
+<form action="/cgi-bin/login.cgi" method="POST">
+>>>>>>> e4e8f1ee21a1210815f72980a6d407f76007f0d7
 
 </div>
 <div style="text-align: center; margin-left: 660px; margin-right: 660px;">
@@ -17,8 +21,13 @@
 	   <strong><span style="color: red;">*</span></strong> = <strong><em>required</em></strong><br><br>
 </div>
 <div style="text-align: center">
+<<<<<<< HEAD
 	   <span style="font-family: Arial;">Username</span><strong><span style="color: red;">*</span></strong>: <input type="text" id="name" name="username" placeholder="Enter username" size="20" maxlength="20" style="margin-left: 5px;" required><br>
 	   <span style="font-family: Arial;">Password</span><strong><span style="color: red;">*</span></strong>: <input type="password" id="password" name="password" placeholder="Enter password" size="20" maxlength="20" style="margin-left: 5px;" required>
+=======
+	   <span style="font-family: Arial;">Username</span><strong><span style="color: red;">*</span></strong>: <input type="text" id="name" name="name" placeholder="Enter username" size="20" maxlength="20" style="margin-left: 5px;" required><br>
+	   <span style="font-family: Arial;">Password</span><strong><span style="color: red;">*</span></strong>: <input type="password" id="password" name="name" placeholder="Enter password" size="20" maxlength="20" style="margin-left: 5px;" required>
+>>>>>>> e4e8f1ee21a1210815f72980a6d407f76007f0d7
 </p><br>
 		   <input id="submit" type="button" onclick="return checkEmpty()" name="Submit Login Info" value="Submit Login Info">
 		   <script type="text/javascript">
@@ -26,10 +35,18 @@
 		   		var name = document.getElementById("name").value;
 		   		var passw = document.getElementById("password").value;
 		   		if(!name == '' && !passw == '') {
+<<<<<<< HEAD
 		   			window.location.href='member_login.php'
 		   		}
 		   	}
 		   </script>
+=======
+		   			window.location.href='/member_login.html'
+		   		}
+		   	}
+		   </script>
+		   <!--<button onclick="window.location.href='/Users/rmarcelita/CS160-Team3/member_login.html'">Submit Login Info</button>-->
+>>>>>>> e4e8f1ee21a1210815f72980a6d407f76007f0d7
 	</form>
 
 </div>
