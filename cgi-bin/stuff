@@ -1,0 +1,1 @@
+        cur.execute("INSERT INTO cs160.openface_data ( " + x1 + ", " + y1 + ") VALUES (%s,%s) ON CONFLICT (video_id) DO UPDATE SET " + x1 + " = " + str(xfloat) + ", " + y1 + " = " + str(yfloat) + ";" , (xfloat, yfloat, frameid, videoid))

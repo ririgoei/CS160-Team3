@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+
+# process_video :
+# 
+# This takes one argument, the video id number.
+# The video should be downloaded before running
+# this script, to:
+#	/cs60/videos/<video-id>.mp4
+# 
+# A modified video is stored to:
+#	/cs60/videos/<video-id>.out.mp4
+# 
+# These scripts are run in order:
+# 	videosplit
+# 	videometa
+# 	getpoints
+# 	makevideo
+#
+
+runpath="cgi-bin"
+
+if [ $# -lt 1 ]
+then
+	echo "missing argument"
+	echo "syntax: $0 <video-id#>"
+	exit 1
+fi
+if [ $# -gt 1 ]
+then
+	echo "too many arguments"
+	echo "syntax: $0 <video-id#>"
+	exit 1
+fi
+
+bash $runpath/videosplit $1
+
+echo "FINISH WITH VIDEOSPLIT"
+
+python $runpath/videometa.py $1
+
+echo "FINISH WITH VIDEOMETA"
+
+python $runpath/getpoints.py $1
+
+echo "FINISH WITH GETPOINTS"
+
+python $runpath/makevid.py $1
+
+echo "FINISH WITH MAKEVID AND DELAUNAY TRIANGLES"
